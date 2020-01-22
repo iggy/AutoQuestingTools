@@ -1,0 +1,9 @@
+## Interface: 70100
+## Title: |cff0000ffAuto Questing Tools|r
+## Version: 1.1.9
+## Notes: |n|cffff0000Features:|r |n- |cffffff00Auto Quest Accept|r;|n- |cffffff00Auto Quest Complete|r;|n- |cffffff00Auto Quest Share|r;|n- |cffffff00Auto Class Training|r.|n|n|cffff0000NOTE:|r By default any of these modules only work if you have your CTRL|nkey pressed when you interact with NPCs.|nIt's a security feature to work around any situation|nnot yet fully implemented or tested.|nThis feature can be toggled with the command /aqt security.|n
+## Author: Tiago Costa
+## OptionalDependencies: QuestReward
+## SavedVariablesPerCharacter: AQT_Options
+AutoQuestingTools.lua
+AutoQuestingTools.xml

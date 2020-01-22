@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\..\FrameXML\UI.xsd">
+	<Script file="AutoQuestingTools.lua"/> 
+	<Frame name="AQT_Frame">
+		<Scripts>
+			<OnEvent function="AQT_OnEvent"/>
+			<OnLoad function="AQT_OnLoad"/>
+		</Scripts>
+	</Frame>
+</Ui>
