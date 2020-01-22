@@ -1,4 +1,4 @@
-local AQT_Version = "1.1.10";
+local AQT_Version = "@project-version@";
 local AQT_Name = "Auto Questing Tools";
 local AQT_BLUE = "|c000099ff";
 local AQT_YELLOW = "|cffffff55";
@@ -6,7 +6,7 @@ local AQT_END_COLOR = "|r";
 local AQT_Title = AQT_BLUE .. AQT_Name .. ":" .. AQT_END_COLOR .. " ";
 
 local EVENTS = {};
-local MAX_LEVEL = 110;
+local MAX_LEVEL = 120;
 
 -- Event ADDON_LOADED
 EVENTS.ADDON_LOADED = "ADDON_LOADED";
