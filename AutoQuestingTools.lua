@@ -1,4 +1,4 @@
-local AQT_Version = "1.1.9";
+local AQT_Version = "1.1.10";
 local AQT_Name = "Auto Questing Tools";
 local AQT_BLUE = "|c000099ff";
 local AQT_YELLOW = "|cffffff55";
