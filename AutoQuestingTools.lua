@@ -6,7 +6,6 @@ local AQT_END_COLOR = "|r";
 local AQT_Title = AQT_BLUE .. AQT_Name .. ":" .. AQT_END_COLOR .. " ";
 
 local EVENTS = {};
-local MAX_LEVEL = 120;
 
 -- Event ADDON_LOADED
 EVENTS.ADDON_LOADED = "ADDON_LOADED";
@@ -70,6 +69,7 @@ end
 
 function AQT_ShowStatus(option)
 	local message = AQT_Title;
+
 	message = message .. options[option].message .. " is ";
 	message = message .. (AQT_Options[option] and ((options[option].status and options[option].status[1]) or "enabled") or ((options[option].status and options[option].status[2]) or "disabled")) .. ".";
 
@@ -88,8 +88,10 @@ function AQT_ShowHelp()
 end
 
 function AQT_OnEvent(self, event, ...)
+	AQT_Debug("event=" .. event);
+
 	if event == EVENTS.ADDON_LOADED and ... == "AutoQuestingTools" then
-		if not AQT_Options then
+		if not AQT_Options or AQT_Options == nil then
 			AQT_Options = {
 				security = true,
 				debug = false,
@@ -119,7 +121,14 @@ function AQT_OnEvent(self, event, ...)
 end
 
 function AQT_HandleQuestDetail()
-	if GetRewardXP() > 0 or UnitLevel("player") == MAX_LEVEL then
+	AQT_Debug("GetRewardXP()=" .. GetRewardXP());
+	AQT_Debug("GetRewardMoney()=" .. GetRewardMoney());
+	AQT_Debug("QuestIsDaily()=" .. tostring(QuestIsDaily()));
+	AQT_Debug("QuestIsWeekly()=" .. tostring(QuestIsWeekly()));
+
+	if GetRewardXP() > 0 or GetRewardMoney() > 0 or QuestIsDaily() or QuestIsWeekly() then
+		AQT_Debug("QuestGetAutoAccept()=" .. tostring(QuestGetAutoAccept()));
+
 		if not QuestGetAutoAccept() then
 			AcceptQuest();
 		end
@@ -129,6 +138,8 @@ function AQT_HandleQuestDetail()
 end
 
 function AQT_HandleNPCInteraction(event)
+	AQT_Debug("GetNumGossipOptions()=" .. GetNumGossipOptions());
+
 	if GetNumGossipOptions() == 0 then
 		local numAvailableQuests = 0;
 		local numActiveQuests = 0;
@@ -140,6 +151,9 @@ function AQT_HandleNPCInteraction(event)
 			numAvailableQuests = GetNumGossipAvailableQuests();
 			numActiveQuests = GetNumGossipActiveQuests();
 		end
+
+		AQT_Debug("numAvailableQuests=" .. numAvailableQuests);
+		AQT_Debug("numActiveQuests=" .. numActiveQuests);
 
 		if numAvailableQuests > 0 or numActiveQuests > 0 then
 			local guid = UnitGUID("target");
