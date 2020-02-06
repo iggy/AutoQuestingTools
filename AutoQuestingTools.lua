@@ -7,7 +7,6 @@ local AQT_Title = AQT_BLUE .. AQT_Name .. ":" .. AQT_END_COLOR .. " ";
 
 local EVENTS = {};
 
--- Event ADDON_LOADED
 EVENTS.ADDON_LOADED = "ADDON_LOADED";
 EVENTS.QUEST_DETAIL = "QUEST_DETAIL";
 EVENTS.QUEST_GREETING = "QUEST_GREETING";
@@ -30,6 +29,8 @@ local options = {
 	announce = {message = "Announce to party channel"},
 	share = {message = "Auto share new quests"},
 }
+
+local AQT_Options;
 
 function AQT_OnLoad(self)
 	for _,v in pairs(EVENTS) do
@@ -88,20 +89,20 @@ function AQT_ShowHelp()
 end
 
 function AQT_OnEvent(self, event, ...)
-	AQT_Debug("event=" .. event);
-
 	if event == EVENTS.ADDON_LOADED and ... == "AutoQuestingTools" then
-		if not AQT_Options or AQT_Options == nil then
-			AQT_Options = {
-				security = true,
-				debug = false,
-				compare = false,
-				auto_complete = false,
-				announce = true,
-				share = true,
-			};
-		end
+		_G.AQT_Options = _G.AQT_Options or {
+			security = true,
+			debug = false,
+			compare = false,
+			auto_complete = false,
+			announce = true,
+			share = true,
+		};
+
+		AQT_Options = _G.AQT_Options;
 	elseif (not AQT_Options.security and not IsControlKeyDown()) or (AQT_Options.security and IsControlKeyDown()) then
+		AQT_Debug("event=" .. event);
+
 		if event == EVENTS.QUEST_GREETING or event == EVENTS.GOSSIP_SHOW then
 			AQT_HandleNPCInteraction(event);
 		elseif event == EVENTS.QUEST_DETAIL then
@@ -204,12 +205,24 @@ function AQT_HandleQuestProgress()
 end
 
 function AQT_HandleQuestAccepted(questIndex)
-	if GetNumGroupMembers() >= 1 then
+	AQT_Debug("questIndex=" .. questIndex);
+	AQT_Debug("IsInGroup()=" .. tostring(IsInGroup()));
+	AQT_Debug("GetNumGroupMembers()=" .. GetNumGroupMembers());
+	AQT_Debug("AQT_Options.announce=" .. tostring(AQT_Options.announce));
+	AQT_Debug("GetQuestLogTitle(questIndex)=" .. GetQuestLogTitle(questIndex));
+	AQT_Debug("GetQuestLink(questIndex)=" .. GetQuestLink(questIndex));
+	
+	if IsInGroup() then
 		if AQT_Options.announce then
-			SendChatMessage("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLink(questIndex), "PARTY");
+			AQT_Debug("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLogTitle(questIndex), "PARTY")
+			SendChatMessage("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLogTitle(questIndex), "PARTY");
 		end
 
 		SelectQuestLogEntry(questIndex);
+
+		AQT_Debug("GetQuestLogQuestText()=" .. GetQuestLogQuestText());
+		AQT_Debug("AQT_Options.share=" .. tostring(AQT_Options.share));
+		AQT_Debug("GetQuestLogPushable()=" .. tostring(GetQuestLogPushable()));
 
 		if AQT_Options.share then
 			if GetQuestLogPushable() then
