@@ -81,7 +81,7 @@ end
 function AQT_ShowHelp()
 	AQT_LocalMessage(AQT_BLUE .. AQT_Name .." v" .. AQT_Version .. AQT_END_COLOR);
 	AQT_LocalMessage(AQT_YELLOW .. "Usage:");
-	AQT_LocalMessage(AQT_YELLOW .. "    /aqt security -" .. AQT_END_COLOR .. " Enables / Disables the use of the security key CTRL. Default: ON");
+	AQT_LocalMessage(AQT_YELLOW .. "    /aqt security" .. AQT_END_COLOR .. " - Enables / Disables the use of the security key CTRL. Default: OFF");
 	AQT_LocalMessage(AQT_YELLOW .. "    /aqt auto_complete" .. AQT_END_COLOR .. " - Enables / Disables auto completing quests with more than one reward choice when the addon QuestReward is present. If disabled you can use the ALT key to temporarily enable this feature. Default: OFF");
 	AQT_LocalMessage(AQT_YELLOW .. "    /aqt announce" .. AQT_END_COLOR .. " - Enables / Disables party announces when automatically accepting quests. Default: ON");
 	AQT_LocalMessage(AQT_YELLOW .. "    /aqt share" .. AQT_END_COLOR .. " - Enables / Disables sharing quests automatically with party members. Default: ON");
@@ -91,7 +91,7 @@ end
 function AQT_OnEvent(self, event, ...)
 	if event == EVENTS.ADDON_LOADED and ... == "AutoQuestingTools" then
 		_G.AQT_Options = _G.AQT_Options or {
-			security = true,
+			security = false,
 			debug = false,
 			compare = false,
 			auto_complete = false,
@@ -204,24 +204,21 @@ function AQT_HandleQuestProgress()
 	CloseQuest();
 end
 
-function AQT_HandleQuestAccepted(questIndex)
+function AQT_HandleQuestAccepted(questIndex, questId)
 	AQT_Debug("questIndex=" .. questIndex);
 	AQT_Debug("IsInGroup()=" .. tostring(IsInGroup()));
 	AQT_Debug("GetNumGroupMembers()=" .. GetNumGroupMembers());
-	AQT_Debug("AQT_Options.announce=" .. tostring(AQT_Options.announce));
-	AQT_Debug("GetQuestLogTitle(questIndex)=" .. GetQuestLogTitle(questIndex));
-	AQT_Debug("GetQuestLink(questIndex)=" .. GetQuestLink(questIndex));
+	AQT_Debug("questId=" .. questId);
+	AQT_Debug("GetQuestLink(questId)=" .. GetQuestLink(questId));
 	
 	if IsInGroup() then
 		if AQT_Options.announce then
-			AQT_Debug("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLogTitle(questIndex), "PARTY")
-			SendChatMessage("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLogTitle(questIndex), "PARTY");
+			AQT_Debug("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLink(questId), "PARTY")
+			SendChatMessage("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLink(questId), "PARTY");
 		end
 
 		SelectQuestLogEntry(questIndex);
 
-		AQT_Debug("GetQuestLogQuestText()=" .. GetQuestLogQuestText());
-		AQT_Debug("AQT_Options.share=" .. tostring(AQT_Options.share));
 		AQT_Debug("GetQuestLogPushable()=" .. tostring(GetQuestLogPushable()));
 
 		if AQT_Options.share then
