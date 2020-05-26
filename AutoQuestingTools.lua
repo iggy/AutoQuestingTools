@@ -100,8 +100,8 @@ function AQT_OnEvent(self, event, ...)
 		};
 
 		AQT_Options = _G.AQT_Options;
-	elseif (not AQT_Options.security and not IsControlKeyDown()) or (AQT_Options.security and IsControlKeyDown()) then
-		AQT_Debug("event=" .. event);
+	elseif event ~= EVENTS.ADDON_LOADED and (not AQT_Options.security and not IsControlKeyDown()) or (AQT_Options.security and IsControlKeyDown()) then
+		AQT_Debug("event=", event);
 
 		if event == EVENTS.QUEST_GREETING or event == EVENTS.GOSSIP_SHOW then
 			AQT_HandleNPCInteraction(event);
@@ -122,13 +122,13 @@ function AQT_OnEvent(self, event, ...)
 end
 
 function AQT_HandleQuestDetail()
-	AQT_Debug("GetRewardXP()=" .. GetRewardXP());
-	AQT_Debug("GetRewardMoney()=" .. GetRewardMoney());
-	AQT_Debug("QuestIsDaily()=" .. tostring(QuestIsDaily()));
-	AQT_Debug("QuestIsWeekly()=" .. tostring(QuestIsWeekly()));
+	AQT_Debug("GetRewardXP()=", GetRewardXP());
+	AQT_Debug("GetRewardMoney()=", GetRewardMoney());
+	AQT_Debug("QuestIsDaily()=", QuestIsDaily());
+	AQT_Debug("QuestIsWeekly()=", QuestIsWeekly());
 
 	if GetRewardXP() > 0 or GetRewardMoney() > 0 or QuestIsDaily() or QuestIsWeekly() then
-		AQT_Debug("QuestGetAutoAccept()=" .. tostring(QuestGetAutoAccept()));
+		AQT_Debug("QuestGetAutoAccept()=", QuestGetAutoAccept());
 
 		if not QuestGetAutoAccept() then
 			AcceptQuest();
@@ -139,7 +139,7 @@ function AQT_HandleQuestDetail()
 end
 
 function AQT_HandleNPCInteraction(event)
-	AQT_Debug("GetNumGossipOptions()=" .. GetNumGossipOptions());
+	AQT_Debug("GetNumGossipOptions()=", GetNumGossipOptions());
 
 	if GetNumGossipOptions() == 0 then
 		local numAvailableQuests = 0;
@@ -153,8 +153,8 @@ function AQT_HandleNPCInteraction(event)
 			numActiveQuests = GetNumGossipActiveQuests();
 		end
 
-		AQT_Debug("numAvailableQuests=" .. numAvailableQuests);
-		AQT_Debug("numActiveQuests=" .. numActiveQuests);
+		AQT_Debug("numAvailableQuests=", numAvailableQuests);
+		AQT_Debug("numActiveQuests=", numActiveQuests);
 
 		if numAvailableQuests > 0 or numActiveQuests > 0 then
 			local guid = UnitGUID("target");
@@ -205,23 +205,23 @@ function AQT_HandleQuestProgress()
 end
 
 function AQT_HandleQuestAccepted(questIndex, questId)
-	AQT_Debug("questIndex=" .. questIndex);
-	AQT_Debug("IsInGroup()=" .. tostring(IsInGroup()));
-	AQT_Debug("GetNumGroupMembers()=" .. GetNumGroupMembers());
-	AQT_Debug("questId=" .. questId);
-	AQT_Debug("GetQuestLink(questId)=" .. GetQuestLink(questId));
+	AQT_Debug("questIndex=", questIndex);
+	AQT_Debug("IsInGroup()=", IsInGroup());
+	AQT_Debug("GetNumGroupMembers()=", GetNumGroupMembers());
+	AQT_Debug("questId=", questId);
+	AQT_Debug("GetQuestLink(questId)=", GetQuestLink(questId));
 	
 	if IsInGroup() then
 		if AQT_Options.announce then
-			AQT_Debug("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLink(questId), "PARTY")
+			AQT_Debug("[" .. AQT_Name .. "] Quest accepted: ", GetQuestLink(questId));
 			SendChatMessage("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLink(questId), "PARTY");
 		end
 
 		SelectQuestLogEntry(questIndex);
 
-		AQT_Debug("GetQuestLogPushable()=" .. tostring(GetQuestLogPushable()));
-
 		if AQT_Options.share then
+			AQT_Debug("GetQuestLogPushable()=", GetQuestLogPushable());
+
 			if GetQuestLogPushable() then
 				QuestLogPushQuest();
 			end
@@ -276,8 +276,16 @@ function AQT_LocalMessage(message)
 	DEFAULT_CHAT_FRAME:AddMessage(tostring(message));
 end
 
-function AQT_Debug(message)
+function AQT_Debug(...)
 	if AQT_Options.debug then
+		local message = ""
+
+		for i = 1, select("#",...) do
+			local value = select(i, ...);
+			if value ~= nil then value = tostring(value) else value = 'nil' end;
+			message = message .. value;
+		end
+
 		AQT_LocalMessage("[" .. AQT_BLUE .. AQT_Name .. "]" .. AQT_END_COLOR .. " Debug: " .. message);
 	end
 end
