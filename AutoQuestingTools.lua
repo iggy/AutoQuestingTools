@@ -139,9 +139,9 @@ function AQT_HandleQuestDetail()
 end
 
 function AQT_HandleNPCInteraction(event)
-	AQT_Debug("GetNumGossipOptions()=", GetNumGossipOptions());
+	AQT_Debug("C_GossipInfo.GetNumOptions()=", C_GossipInfo.GetNumOptions());
 
-	if GetNumGossipOptions() == 0 then
+	if C_GossipInfo.GetNumOptions() == 0 then
 		local numAvailableQuests = 0;
 		local numActiveQuests = 0;
 
@@ -149,8 +149,8 @@ function AQT_HandleNPCInteraction(event)
 			numAvailableQuests = GetNumAvailableQuests();
 			numActiveQuests = GetNumActiveQuests();
 		elseif event == EVENTS.GOSSIP_SHOW then
-			numAvailableQuests = GetNumGossipAvailableQuests();
-			numActiveQuests = GetNumGossipActiveQuests();
+			numAvailableQuests = C_GossipInfo.GetNumAvailableQuests();
+			numActiveQuests = C_GossipInfo.GetNumActiveQuests();
 		end
 
 		AQT_Debug("numAvailableQuests=", numAvailableQuests);
@@ -175,7 +175,7 @@ function AQT_HandleNPCInteraction(event)
 				if event == EVENTS.QUEST_GREETING then
 					SelectAvailableQuest(i);
 				elseif event == EVENTS.GOSSIP_SHOW then
-					SelectGossipAvailableQuest(i);
+					C_GossipInfo.SelectAvailableQuest(i);
 				end
 			end
 
@@ -189,7 +189,7 @@ function AQT_HandleNPCInteraction(event)
 				if event == EVENTS.QUEST_GREETING then
 					SelectActiveQuest(i);
 				elseif event == EVENTS.GOSSIP_SHOW then
-					SelectGossipActiveQuest(i);
+					C_GossipInfo.SelectActiveQuest(i);
 				end
 			end
 		end
