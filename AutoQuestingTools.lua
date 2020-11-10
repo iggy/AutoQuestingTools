@@ -204,8 +204,7 @@ function AQT_HandleQuestProgress()
 	CloseQuest();
 end
 
-function AQT_HandleQuestAccepted(questIndex, questId)
-	AQT_Debug("questIndex=", questIndex);
+function AQT_HandleQuestAccepted(questId)
 	AQT_Debug("IsInGroup()=", IsInGroup());
 	AQT_Debug("GetNumGroupMembers()=", GetNumGroupMembers());
 	AQT_Debug("questId=", questId);
@@ -217,7 +216,7 @@ function AQT_HandleQuestAccepted(questIndex, questId)
 			SendChatMessage("[" .. AQT_Name .. "] Quest accepted: " .. GetQuestLink(questId), "PARTY");
 		end
 
-		SelectQuestLogEntry(questIndex);
+		C_QuestLog.SetSelectedQuest(questId);
 
 		if AQT_Options.share then
 			AQT_Debug("GetQuestLogPushable()=", GetQuestLogPushable());
