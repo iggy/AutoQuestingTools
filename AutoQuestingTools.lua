@@ -219,9 +219,9 @@ function AQT_HandleQuestAccepted(questId)
 		C_QuestLog.SetSelectedQuest(questId);
 
 		if AQT_Options.share then
-			AQT_Debug("GetQuestLogPushable()=", GetQuestLogPushable());
+			AQT_Debug("GetQuestLogPushable()=", C_QuestLog.IsPushableQuest(questId));
 
-			if GetQuestLogPushable() then
+			if C_QuestLog.IsPushableQuest(questId) then
 				QuestLogPushQuest();
 			end
 		end
